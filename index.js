@@ -3,6 +3,7 @@ const { Client, GatewayIntentBits, Collection, Partials } = require('discord.js'
 const fs = require('fs');
 const path = require('path');
 const { db } = require('./utils/database');
+const { startWebServer } = require('./web/server');
 
 const client = new Client({
   intents: [
@@ -216,5 +217,10 @@ setInterval(async () => {
     statusIndex++;
   } catch {}
 }, 60 * 1000);
+
+// Start the web dashboard. The server is created immediately so Railway's
+// health checks can reach port 3000 right away; the Discord client reference
+// is passed in so routes can query live bot data once the client is ready.
+startWebServer(client);
 
 client.login(process.env.TOKEN);

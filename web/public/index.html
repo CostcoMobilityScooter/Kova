@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kova Dashboard</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- ── Sidebar ─────────────────────────────────────────────────────────── -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <img id="bot-avatar" src="" alt="Kova" />
+      <div>
+        <span class="brand-name">Kova</span>
+        <span id="status-badge" class="badge badge-offline">Offline</span>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="#" class="nav-link active" data-page="dashboard">📊 Dashboard</a></li>
+      <li><a href="#" class="nav-link" data-page="status">🟢 Status</a></li>
+      <li><a href="#" class="nav-link" data-page="admin">🔧 Admin Panel</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <span id="ping-display">Ping: —</span>
+    </div>
+  </nav>
+
+  <!-- ── Main content ────────────────────────────────────────────────────── -->
+  <main class="content">
+
+    <!-- Dashboard page -->
+    <section id="page-dashboard" class="page active">
+      <h1>Dashboard</h1>
+      <p class="subtitle">Live stats for Kova across all servers.</p>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🏠</div>
+          <div class="stat-value" id="stat-servers">—</div>
+          <div class="stat-label">Servers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value" id="stat-members">—</div>
+          <div class="stat-label">Total Members</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-value" id="stat-commands">—</div>
+          <div class="stat-label">Slash Commands</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-value" id="stat-uptime">—</div>
+          <div class="stat-label">Uptime</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-value" id="stat-warnings">—</div>
+          <div class="stat-label">Warnings Issued</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎉</div>
+          <div class="stat-value" id="stat-giveaways">—</div>
+          <div class="stat-label">Giveaways Run</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-value" id="stat-levels">—</div>
+          <div class="stat-label">Users Leveling</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💬</div>
+          <div class="stat-value" id="stat-confessions">—</div>
+          <div class="stat-label">Confessions</div>
+        </div>
+      </div>
+
+      <h2>Top Servers</h2>
+      <div class="table-wrap">
+        <table id="guild-table">
+          <thead>
+            <tr>
+              <th>Server</th>
+              <th>Members</th>
+              <th>Setup</th>
+            </tr>
+          </thead>
+          <tbody id="guild-tbody">
+            <tr><td colspan="3" class="loading">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Status page -->
+    <section id="page-status" class="page">
+      <h1>Bot Status</h1>
+      <p class="subtitle">Real-time connection health.</p>
+
+      <div class="status-card" id="status-card">
+        <div class="status-indicator" id="status-indicator"></div>
+        <div class="status-details">
+          <h2 id="status-title">Checking…</h2>
+          <p id="status-desc"></p>
+          <ul class="status-list">
+            <li><span class="label">Tag</span><span id="s-tag">—</span></li>
+            <li><span class="label">ID</span><span id="s-id">—</span></li>
+            <li><span class="label">Ping</span><span id="s-ping">—</span></li>
+            <li><span class="label">Uptime</span><span id="s-uptime">—</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin page -->
+    <section id="page-admin" class="page">
+      <h1>Admin Panel</h1>
+      <p class="subtitle">Manage per-server settings. Requires <code>DASHBOARD_TOKEN</code>.</p>
+
+      <div class="admin-auth">
+        <label for="admin-token">Dashboard Token</label>
+        <div class="token-row">
+          <input type="password" id="admin-token" placeholder="Enter DASHBOARD_TOKEN…" />
+          <button id="admin-login-btn" class="btn btn-primary">Unlock</button>
+        </div>
+        <p id="admin-auth-error" class="error-msg hidden"></p>
+      </div>
+
+      <div id="admin-content" class="hidden">
+        <div class="admin-toolbar">
+          <label for="guild-select">Select Server</label>
+          <select id="guild-select">
+            <option value="">— choose a server —</option>
+          </select>
+        </div>
+
+        <div id="guild-settings" class="hidden">
+
+          <!-- Welcome -->
+          <div class="settings-section">
+            <h3>👋 Welcome System</h3>
+            <div class="form-row">
+              <label>Enabled</label>
+              <input type="checkbox" id="w-enabled" />
+            </div>
+            <div class="form-row">
+              <label>Channel ID</label>
+              <input type="text" id="w-channel" placeholder="Channel snowflake ID" />
+            </div>
+            <div class="form-row">
+              <label>Welcome Message</label>
+              <input type="text" id="w-message" placeholder="Welcome {user} to {server}!" />
+            </div>
+            <div class="form-row">
+              <label>Goodbye Channel ID</label>
+              <input type="text" id="w-goodbye-channel" placeholder="Channel snowflake ID" />
+            </div>
+            <div class="form-row">
+              <label>Goodbye Message</label>
+              <input type="text" id="w-goodbye-message" placeholder="Goodbye {user}!" />
+            </div>
+            <button class="btn btn-primary" id="save-welcome">Save Welcome</button>
+            <span class="save-status" id="save-welcome-status"></span>
+          </div>
+
+          <!-- Levels -->
+          <div class="settings-section">
+            <h3>📈 Leveling System</h3>
+            <div class="form-row">
+              <label>Enabled</label>
+              <input type="checkbox" id="l-enabled" />
+            </div>
+            <div class="form-row">
+              <label>Level-up Channel ID</label>
+              <input type="text" id="l-channel" placeholder="Channel snowflake ID" />
+            </div>
+            <div class="form-row">
+              <label>Level-up Message</label>
+              <input type="text" id="l-message" placeholder="GG {user}, you reached level {level}!" />
+            </div>
+            <div class="form-row">
+              <label>XP per Message</label>
+              <input type="number" id="l-xp" min="1" max="100" />
+            </div>
+            <button class="btn btn-primary" id="save-levels">Save Levels</button>
+            <span class="save-status" id="save-levels-status"></span>
+          </div>
+
+          <!-- Moderation -->
+          <div class="settings-section">
+            <h3>🛡️ Moderation</h3>
+            <div class="form-row">
+              <label>Word Filter</label>
+              <input type="checkbox" id="m-filter" />
+            </div>
+            <div class="form-row">
+              <label>Anti-Spam</label>
+              <input type="checkbox" id="m-antispam" />
+            </div>
+            <div class="form-row">
+              <label>Anti-Raid</label>
+              <input type="checkbox" id="m-antiraid" />
+            </div>
+            <div class="form-row">
+              <label>Max Warnings Before Ban</label>
+              <input type="number" id="m-warnings" min="1" max="20" />
+            </div>
+            <button class="btn btn-primary" id="save-mod">Save Moderation</button>
+            <span class="save-status" id="save-mod-status"></span>
+          </div>
+
+          <!-- Warnings list -->
+          <div class="settings-section">
+            <h3>⚠️ Active Warnings</h3>
+            <button class="btn btn-secondary" id="load-warnings-btn">Load Warnings</button>
+            <div class="table-wrap" id="warnings-wrap" style="margin-top:1rem;">
+              <table id="warnings-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Moderator</th>
+                    <th>Reason</th>
+                    <th>Date</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="warnings-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div><!-- /guild-settings -->
+      </div><!-- /admin-content -->
+    </section>
+
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
